@@ -19,12 +19,31 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 7
-      - name: build others
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+      - name: build dist
         env:
           CLASH_DASHBOARD: 'https://github.com/Dreamacro/clash-dashboard.git'
-          VERSION: 'latest'
           DIR: 'clash-dashboard'
         run: |
           gh repo create Dreamacro/clash-dashboard || git clone https://github.com/Dreamacro/clash-dashboard.git
           cd ${{ env.DIR }} && pnpm i && pnpm build
-          docker build -t clash:lastest ..
+      - name: publish docker images
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: publish docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clash:latest
