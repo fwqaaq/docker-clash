@@ -5,6 +5,7 @@ name: Create env
 on:
   push:
     branches: [main]
+    paths: ['dockerfile']
 env:
   version: latest
 
