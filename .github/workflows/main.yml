@@ -5,6 +5,8 @@ name: Create env
 on:
   push:
     branches: [main]
+env:
+  version: latest
 
 jobs:
   build:
@@ -33,8 +35,9 @@ jobs:
         env:
           CLASH_DASHBOARD: 'https://github.com/Dreamacro/clash-dashboard.git'
           DIR: 'clash-dashboard'
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh repo create Dreamacro/clash-dashboard || git clone https://github.com/Dreamacro/clash-dashboard.git
+          gh repo clone Dreamacro/clash-dashboard
           cd ${{ env.DIR }} && pnpm i && pnpm build
       - name: publish docker images
         uses: docker/login-action@v2
@@ -46,4 +49,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clash:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clash:${{ env.latest }}
