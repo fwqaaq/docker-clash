@@ -20,4 +20,11 @@ jobs:
         with:
           version: 7
       - name: build others
-        run: ./install.sh
+        env:
+          CLASH_DASHBOARD: 'https://github.com/Dreamacro/clash-dashboard.git'
+          VERSION: 'latest'
+          DIR: 'clash-dashboard'
+        run: |
+          gh repo create Dreamacro/clash-dashboard || git clone https://github.com/Dreamacro/clash-dashboard.git
+          cd ${{ env.DIR }} && pnpm i && pnpm build
+          docker build -t clash:lastest ..
