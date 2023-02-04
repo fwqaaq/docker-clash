@@ -43,10 +43,10 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_TOKEN_V2 }}
       - name: publish docker images
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clash:${{ env.latest }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/clash:${{ env.version }}
