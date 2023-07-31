@@ -1,7 +1,11 @@
 FROM nginx:mainline-alpine-slim
 
-ENV DIR clash-dashboard
+ENV Dashboard clash-dashboard
+ENV Yacd yacd
+ENV Github .github
 
-COPY ./${DIR}/dist /usr/share/nginx/html/
+COPY ./${Dashboard}/dist /usr/share/nginx/dashboard/
+COPY ./${Yacd}/public /usr/share/nginx/yacd/ 
+COPY ./${Github}/config /etc/nginx/conf.d/
 
-EXPOSE 80
+EXPOSE 80 8080
