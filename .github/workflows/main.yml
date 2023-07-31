@@ -32,14 +32,22 @@ jobs:
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - name: build dist
+      - name: Dashboard
         env:
           CLASH_DASHBOARD: 'https://github.com/Dreamacro/clash-dashboard.git'
           DIR: 'clash-dashboard'
           GH_TOKEN: ${{ github.token }}
         run: |
           gh repo clone Dreamacro/clash-dashboard
-          cd ${{ env.DIR }} && pnpm i && pnpm build
+          cd ${{ env.DIR }} && pnpm i --no-frozen-lockfile && pnpm build
+      - name: yacd
+        env:
+          CLASH_YACD: 'https://github.com/haishanh/yacd'
+          DIR: 'yacd'
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh repo clone haishanh/yacd
+          cd ${{ env.DIR }} && pnpm i --no-frozen-lockfile && pnpm build
       - name: publish docker images
         uses: docker/login-action@v2
         with:
