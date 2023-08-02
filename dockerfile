@@ -8,4 +8,6 @@ COPY ./${Dashboard}/dist /usr/share/nginx/dashboard/
 COPY ./${Yacd}/public /usr/share/nginx/yacd/ 
 COPY ./${Github}/config /etc/nginx/conf.d/
 
-EXPOSE 80 8080
+VOLUME /user/share/nginx
+
+EXPOSE 8888 8080
